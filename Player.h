@@ -4,12 +4,15 @@ class Player
 {
 
 public:
-
 	Player() {
 		Money = 1000;
 	}
 
-public:
+private:
 	int Money;
+
+public:
+	int GetMoney();
+	void AddMoney(int amount);
 
 };
