@@ -7,7 +7,7 @@ class Game
 {
 
 public:
-	bool Running;
+	bool running;
 	Player player;
 	Wheel wheel;
 
