@@ -4,11 +4,12 @@
 
 using namespace std;
 
-void Game::StartGame()
+void Game::Run()
 {
 	cout << " ~ ~ Welcome to Roulette ~ ~ \n\n";
 	running = true;
 	player = Player();
+	wheel = Wheel();
 
 	while (running)
 	{
@@ -17,57 +18,88 @@ void Game::StartGame()
 		int betOption = Utils::PromptForInputOption("\nChoose amount of money to bet: \n1. 100:-\n2. 300:-\n3. 500:-\n\n");
 		int betAmount;
 
-		switch (betOption) {
+		switch (betOption)
+		{
 			case 1:
-				betAmount = -100;
+				betAmount = 100;
 				break;
 			case 2:
-				betAmount = -300;
+				betAmount = 300;
 				break;
 			case 3:
-				betAmount = -500;
+				betAmount = 500;
 				break;
 			default:
 				system("cls");
-				cout << "\nInvalid option.\n\n";
+				cout << "\nInvalid option. Restarting...\n\n";
 				continue;
 		}
 
-		if (player.GetMoney() >= abs(betAmount)) {
-			player.AddMoney(betAmount);
+		if (player.GetMoney() >= betAmount)
+		{
+			player.AddMoney(-betAmount);
+			cout << betAmount << " money was withdrawn from your account.\n\n";
 		}
-		else {
-			cout << "\n\nInsufficient funds.\n\n";
+		else
+		{
+			cout << "\n\nInsufficient funds. Exiting...\n\n";
+			running = false;
+			continue;
 		}
 
 		//===== BET TYPE OPTIONS =====//
 		int betTypeOption = Utils::PromptForInputOption("Choose bet type: \n\n1. Color\n2. Number (1-36)");
-		if (betTypeOption == 1) {
-
-		}
-		else if (betTypeOption == 2) {
-			int chosenNumber = Utils::PromptForInputOption("Choose a number between 1 and 36:");
-			if (chosenNumber >= 1 && chosenNumber <= 36) {
-				// Spin wheel.
+		int wheelResult = wheel.Spin();
+		int winAmount = 0;
+		if (betTypeOption == 1)
+		{
+			int chosenColor = Utils::PromptForInputOption("Choose a color:\n1. Black\n2. Red");
+			if ((chosenColor == 1 && wheelResult % 2 == 0) || (chosenColor == 2 && wheelResult % 2 != 0))
+			{
+				winAmount = betAmount * 2;
 			}
-			else {
+		}
+		else if (betTypeOption == 2)
+		{
+			int chosenNumber = Utils::PromptForInputOption("Choose a number between 1 and 36:");
+			if (chosenNumber >= 1 && chosenNumber <= 36)
+			{
+				if (chosenNumber == wheelResult)
+				{
+					winAmount = betAmount * 10;
+				}
+			}
+			else
+			{
 				cout << "Invalid number.";
 			}
 		}
-		else {
+		else
+		{
 			cout << "Invalid option.";
+		}
+
+		cout << "\n\nWheel Result: \nColor: " << (wheelResult % 2 == 0 ? "Black" : "Red") << "\nNumber: " << wheelResult;
+		if (winAmount > 0)
+		{
+			player.AddMoney(winAmount);
+			cout << "\n\nYou won: " << winAmount << "\nTotal profit: " << player.GetMoneyGained();
+		}
+		else
+		{
+			cout << "\n\nYou lost";
 		}
 		
 		//===== ROUND FINISHED OPTIONS =====//
 		int roundFinishedOption = 0;
-		while (roundFinishedOption != 1 && roundFinishedOption != 2) {
-			roundFinishedOption = Utils::PromptForInputOption("\n\nRound finished. Choose next action:\n1. Continue\n2. Quit");
-			if (roundFinishedOption == 2) {
-				running = false;
-			}
-			else if (roundFinishedOption != 1) {
-				cout << "Invalid option.";
-			}
+		roundFinishedOption = Utils::PromptForInputOption("\n\nRound finished. Choose next action:\n1. Continue\n2. Quit");
+		if (roundFinishedOption == 2)
+		{
+			running = false;
+		}
+		else if (roundFinishedOption != 1)
+		{
+			cout << "Invalid option. Restarting...";
 		}
 
 		system("cls");

@@ -12,6 +12,6 @@ public:
 	Wheel wheel;
 
 public:
-	void StartGame();
+	void Run();
 
 };

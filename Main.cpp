@@ -2,6 +2,6 @@
 
 int main() {
 	Game gameInstance;
-	gameInstance.StartGame();
+	gameInstance.Run();
 	return 0;
 }
