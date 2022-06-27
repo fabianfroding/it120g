@@ -31,7 +31,7 @@ void Game::Run()
 				break;
 			default:
 				system("cls");
-				cout << "\nInvalid option. Restarting...\n\n";
+				cout << "\nInvalid option. Please choose a valid option...\n\n";
 				continue;
 		}
 
@@ -42,52 +42,71 @@ void Game::Run()
 		}
 		else
 		{
-			cout << "\n\nInsufficient funds. Exiting...\n\n";
+			cout << "\n\nYou are out of money. Exiting...\n\n";
 			running = false;
 			continue;
 		}
 
 		//===== BET TYPE OPTIONS =====//
-		int betTypeOption = Utils::PromptForInputOption("Choose bet type: \n\n1. Color\n2. Number (1-36)");
-		int wheelResult = wheel.Spin();
-		int winAmount = 0;
-		if (betTypeOption == 1)
+		int betTypeOption = 1;
+		while (betTypeOption == 1 || betTypeOption == 2)
 		{
-			int chosenColor = Utils::PromptForInputOption("Choose a color:\n1. Black\n2. Red");
-			if ((chosenColor == 1 && wheelResult % 2 == 0) || (chosenColor == 2 && wheelResult % 2 != 0))
+			betTypeOption = Utils::PromptForInputOption("Choose if you want to bet on a color or a number: \n\n1. Color\n2. Number (1-36)");
+			int wheelResult = wheel.Spin();
+			int winAmount = 0;
+			if (betTypeOption == 1)
 			{
-				winAmount = betAmount * 2;
-			}
-		}
-		else if (betTypeOption == 2)
-		{
-			int chosenNumber = Utils::PromptForInputOption("Choose a number between 1 and 36:");
-			if (chosenNumber >= 1 && chosenNumber <= 36)
-			{
-				if (chosenNumber == wheelResult)
+				int chosenColor = Utils::PromptForInputOption("Choose a color:\n1. Black\n2. Red");
+				if (chosenColor != 1 && chosenColor != 2)
 				{
-					winAmount = betAmount * 10;
+					cout << "Invalid option. Please choose a valid option...\n\n";
+					continue;
+				}
+				if ((chosenColor == 1 && wheelResult % 2 == 0) || (chosenColor == 2 && wheelResult % 2 != 0))
+				{
+					winAmount = betAmount * 2;
+				}
+			}
+			else if (betTypeOption == 2)
+			{
+				int chosenNumber = Utils::PromptForInputOption("Choose a number between 1 and 36:");
+				if (chosenNumber >= 1 && chosenNumber <= 36)
+				{
+					if (chosenNumber == wheelResult)
+					{
+						winAmount = betAmount * 10;
+					}
+				}
+				else
+				{
+					cout << "Invalid number. Please choose a valid number...\n\n";
+					continue;
 				}
 			}
 			else
 			{
-				cout << "Invalid number.";
+				cout << "Invalid option. Please choose a valid option...\n\n";
+				betTypeOption = 1;
+				continue;
+			}
+
+			cout << "\n\nWheel Result: \nColor: " << (wheelResult % 2 == 0 ? "Black" : "Red") << "\nNumber: " << wheelResult;
+			if (winAmount > 0)
+			{
+				player.AddMoney(winAmount);
+				cout << "\n\nYou won: " << winAmount << "\nTotal profit: " << player.GetMoneyGained() << "\n\n";
+				betTypeOption = 0;
+			}
+			else
+			{
+				cout << "\n\nYou lost\n\n";
+				betTypeOption = 0;
 			}
 		}
-		else
-		{
-			cout << "Invalid option.";
-		}
 
-		cout << "\n\nWheel Result: \nColor: " << (wheelResult % 2 == 0 ? "Black" : "Red") << "\nNumber: " << wheelResult;
-		if (winAmount > 0)
+		if (betTypeOption == 0)
 		{
-			player.AddMoney(winAmount);
-			cout << "\n\nYou won: " << winAmount << "\nTotal profit: " << player.GetMoneyGained();
-		}
-		else
-		{
-			cout << "\n\nYou lost";
+			continue;
 		}
 		
 		//===== ROUND FINISHED OPTIONS =====//
