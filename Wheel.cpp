@@ -4,6 +4,7 @@
 
 int Wheel::Spin()
 {
+	// Returns a random number between 1 and 36.
 	int result = 0;
 
 	srand((unsigned int)time(0));

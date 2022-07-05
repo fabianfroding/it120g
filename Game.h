@@ -7,11 +7,11 @@ class Game
 {
 
 public:
-	bool running;
-	Player player;
-	Wheel wheel;
+	bool running; // Flag to check if the main game loop is running.
+	Player player; // Instance of the user.
+	Wheel wheel; // Instance of the wheel.
 
 public:
-	void Run();
+	void Run(); // Starts the game.
 
 };
