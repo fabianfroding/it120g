@@ -8,7 +8,7 @@ using namespace std;
 ============================================================*/
 
 /*	Reusable function for reading option-input chosen by the player.
-	Returns an integer corresponding the the chosen option if valid, else return -1. */
+	Returns an integer corresponding to the chosen option if valid, else return -1. */
 int PromptForInputOption(string promptMessage) {
 	string input;
 	cout << promptMessage << "\n";
@@ -61,9 +61,15 @@ void Run() {
 
 	// Game-loop.
 	while (bRunning) {
+		// Show available money and exit if user is out of money.
+		cout << "Money available: " << money;
+		if (money < 100) {
+			cout << "\n\nYou are out of money. Exiting...\n\n";
+			bRunning = false;
+			continue;
+		}
 
 		// Prompt player to choose amount of money to bet.
-		cout << "Money available: " << money;
 		int betOption = PromptForInputOption("\nChoose amount of money to bet: \n1. 100:-\n2. 300:-\n3. 500:-\n\n");
 		if (betOption < 1 || betOption > 3) {
 			system("cls");
@@ -78,8 +84,7 @@ void Run() {
 			cout << betAmount << " money was withdrawn from your account.\n\n";
 		}
 		else {
-			cout << "\n\nYou are out of money. Exiting...\n\n";
-			bRunning = false;
+			cout << "\n\nYou do not have enough money to bet on that option.\n\n";
 			continue;
 		}
 
